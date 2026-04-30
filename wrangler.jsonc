@@ -1,8 +1,0 @@
-{
-    "name": "worker-name",
-    "compatibility_date": "2026-04-30",
-    "main": "src/main.tsx",
-    "assets": {
-        "directory": "./public/assets"
-    }
-}
