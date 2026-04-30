@@ -1,0 +1,443 @@
+@import './styles/fonts.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Create proposal modal dropdown overrides - ensure dark bg and visible text */
+.create-proposal-select__control {
+  background-color: #100F10 !important;
+}
+.create-proposal-select__value-container,
+.create-proposal-select__input-container {
+  background-color: transparent !important;
+}
+.create-proposal-select__input-container input {
+  color: white !important;
+}
+.create-proposal-select__single-value {
+  color: white !important;
+  font-size: 14px !important;
+  font-family: "Titillium Web", sans-serif !important;
+}
+.create-proposal-select__placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+.create-proposal-select__menu,
+.create-proposal-select__menu-list {
+  background-color: #100F10 !important;
+  z-index: 9999 !important;
+}
+.create-proposal-select__option {
+  background-color: transparent !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-family: "Titillium Web", sans-serif !important;
+}
+.create-proposal-select__option--is-focused,
+.create-proposal-select__option--is-selected {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Dashboard DAO dropdown - portal menu + full text visibility */
+.dashboard-dao-select-wrapper .dashboard-dao-select__control {
+  background-color: #100F10 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  min-height: 40px !important;
+  height: 40px !important;
+}
+.dashboard-dao-select-wrapper .dashboard-dao-select__value-container {
+  overflow: visible !important;
+  padding: 0 8px !important;
+  align-items: center !important;
+}
+.dashboard-dao-select-wrapper .dashboard-dao-select__single-value {
+  color: white !important;
+  font-size: 14px !important;
+  font-family: "Titillium Web", sans-serif !important;
+  overflow: visible !important;
+  max-width: none !important;
+}
+.dashboard-dao-select-wrapper .dashboard-dao-select__placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-family: "Titillium Web", sans-serif !important;
+}
+.dashboard-dao-select-wrapper .dashboard-dao-select__menu {
+  z-index: 99999 !important;
+}
+.dashboard-dao-select-wrapper .dashboard-dao-select__option {
+  font-family: "Titillium Web", sans-serif !important;
+  font-size: 14px !important;
+}
+
+/* Login page gradient button */
+.login-gradient-btn {
+  width: 160px;
+  height: 36px;
+  border-radius: 6px;
+  background: linear-gradient(to bottom, #FFB700, #D06403);
+  color: white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 12px;
+  font-weight: 900;
+  border: none;
+  cursor: pointer;
+
+  transition: filter 0.2s, transform 0.15s;
+}
+.login-gradient-btn:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: scale(1.03);
+}
+.login-gradient-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.login-gradient-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+/* MSIG action buttons (Approve / Execute) */
+.msig-approve-btn,
+.msig-execute-btn {
+  display: flex;
+  width: 75px;
+  height: 24px;
+  padding: 0 16px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  color: var(--Neutral-White, #FFF);
+  font-family: "Titillium Web", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 160%;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.15s, opacity 0.2s;
+}
+
+.msig-approve-btn {
+  gap: 8px;
+  background: linear-gradient(180deg, #2B93F1 0%, #0D3253 100%);
+  box-shadow: 0 1px 2px 0 rgba(251, 251, 251, 0.25) inset;
+}
+
+.msig-execute-btn {
+  gap: 4px;
+  background: linear-gradient(180deg, #FFB700 0%, #D06403 100%);
+  box-shadow: 0 -1px 2px 0 #492000 inset, 0 1px 2px 0 #FFE998 inset;
+  text-shadow: 0 1px 1px #4D300C;
+}
+
+.msig-approve-btn:hover:not(:disabled),
+.msig-execute-btn:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+.msig-approve-btn:active:not(:disabled),
+.msig-execute-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.msig-approve-btn:disabled,
+.msig-execute-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Proposal detail modal – neutral buttons (Cancel, Cleanup, Close) */
+.proposal-detail-neutral-btn {
+  transition: filter 0.2s, transform 0.15s;
+}
+.proposal-detail-neutral-btn:hover:not(:disabled) {
+  filter: brightness(1.2);
+}
+.proposal-detail-neutral-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.proposal-detail-neutral-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Proposal detail modal – value text */
+.proposal-detail-value {
+  color: var(--Neutral-LightGrey, #B9B9B9);
+  font-family: "Titillium Web", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+/* Dashboard sidebar selected tab */
+.tab-selected-gradient {
+  background: linear-gradient(to bottom, #3D3D3D, #1C1C1C);
+}
+
+/* Create proposal planet label (gradient text) */
+.create-proposal-planet-label {
+  font-family: Inter, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 160%;
+  background: linear-gradient(180deg, #FFF 38.79%, #8F8E8E 81.03%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Create proposal page heading */
+.create-proposal-heading {
+  background: linear-gradient(180deg, #FFF 38.79%, #8F8E8E 81.03%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: Inter, sans-serif;
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 160%;
+}
+
+/* Create proposal Cancel button */
+.create-proposal-cancel-btn {
+  display: flex;
+  width: 100px;
+  height: 32px;
+  padding: 6px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  border: 1px solid var(--Neutral-Grey, #777778);
+  color: var(--Neutral-LightGrey, #B9B9B9);
+  text-align: center;
+  font-family: Orbitron, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  letter-spacing: 0.36px;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+.create-proposal-cancel-btn:hover {
+  opacity: 0.9;
+  border-color: #999;
+}
+
+/* Create proposal Next button */
+.create-proposal-next-btn {
+  display: flex;
+  width: 100px;
+  height: 36px;
+  padding: 0 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, #FFB700 0%, #D06403 100%);
+  box-shadow: 0 -1px 2px 0 #492000 inset, 0 1px 2px 0 #FFE998 inset;
+  color: #FFF;
+  text-align: center;
+  text-shadow: 0 1px 1px #4D300C;
+  font-family: Orbitron, sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 900;
+  line-height: normal;
+  letter-spacing: 0.36px;
+  border: none;
+  cursor: pointer;
+  transition: filter 0.2s, transform 0.15s;
+}
+.create-proposal-next-btn:hover:not(:disabled) {
+  filter: brightness(1.15);
+  transform: scale(1.03);
+}
+.create-proposal-next-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+.create-proposal-next-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Planet image zoom-out animation on change */
+@keyframes planet-zoom-out {
+  from {
+    transform: scale(1.55);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes planet-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.create-proposal-planet-image-in {
+  animation: planet-zoom-out 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.create-proposal-planet-image-out {
+  animation: planet-fade-out 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Create proposal form fields (title, memo, dropdowns) - no labels, placeholder only */
+.create-proposal-field {
+  display: flex;
+  width: 100%;
+  height: 36px;
+  padding: 0 12px;
+  align-items: center;
+  gap: 25px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #100F10;
+  color: var(--Neutral-White, #FFF);
+  text-align: left;
+  font-family: "Titillium Web", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.create-proposal-field::placeholder {
+  color: var(--Neutral-White, #FFF);
+  opacity: 0.6;
+}
+.create-proposal-field:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.create-proposal-field:focus {
+  border-color: rgba(217, 165, 85, 0.5);
+}
+
+/* Create proposal description - same padding as title/memo (12px all sides) */
+.create-proposal-description {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px !important;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #100F10;
+  color: var(--Neutral-White, #FFF);
+  text-align: left;
+  font-family: "Titillium Web", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  outline: none;
+  transition: border-color 0.2s;
+  resize: vertical;
+}
+.create-proposal-description::placeholder {
+  color: var(--Neutral-White, #FFF);
+  opacity: 0.6;
+}
+.create-proposal-description:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+.create-proposal-description:focus {
+  border-color: rgba(217, 165, 85, 0.5);
+}
+
+/* Create proposal dropdown - same padding as title/memo, vertically centered */
+.create-proposal-dropdown-wrapper .create-proposal-select__control {
+  height: 36px !important;
+  min-height: 36px !important;
+  padding: 0 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  box-sizing: border-box !important;
+}
+.create-proposal-dropdown-wrapper .create-proposal-select__value-container {
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  overflow: hidden !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+.create-proposal-dropdown-wrapper .create-proposal-select__input-container {
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+.create-proposal-dropdown-wrapper .create-proposal-select__input-container input {
+  color: var(--Neutral-White, #FFF) !important;
+  text-align: center !important;
+  font-family: "Titillium Web", sans-serif !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+}
+.create-proposal-dropdown-wrapper .create-proposal-select__single-value,
+.create-proposal-dropdown-wrapper .create-proposal-select__placeholder {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: var(--Neutral-White, #FFF) !important;
+  text-align: center !important;
+  font-family: "Titillium Web", sans-serif !important;
+  font-size: 12px !important;
+  font-style: normal !important;
+  font-weight: 400 !important;
+  line-height: normal !important;
+}
+.create-proposal-dropdown-wrapper .create-proposal-select__placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+.create-proposal-dropdown-wrapper .create-proposal-select__indicators {
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Skeleton loader animation */
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+.skeleton-animate {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.06) 25%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+.skeleton {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* Create proposal page subheading */
+.create-proposal-subheading {
+  color: var(--Neutral-LightGrey, #B9B9B9);
+  font-family: "Titillium Web", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 160%;
+}

@@ -1,0 +1,106 @@
+{
+  "name": "generic-msig",
+  "version": "1.0.0",
+  "description": "Generic MSIG",
+  "main": "main.js",
+  "repository": "https://github.com/Alien-Worlds/generic-msig-ui.git",
+  "author": "Salman Gurmani <sgurmani@dacoco.io>",
+  "homepage": "https://www.dacoco.io",
+  "license": "MIT",
+  "keywords": [
+    "generic",
+    "msig",
+    "dacoco"
+  ],
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "dev:legacy": "npm run build:electron-files && npx concurrently \"npm run dev:react\" \"npx wait-on http://localhost:3000 && npx cross-env NODE_ENV=development electron .\"",
+    "dev:react": "./node_modules/.bin/vite",
+    "build:electron-files": "npx esbuild main.ts --bundle --platform=node --format=cjs --outfile=main.js --external:electron && npx esbuild preload.ts --bundle --platform=node --format=cjs --outfile=preload.js --external:electron",
+    "build:legacy": "npm run build:electron-files && ./node_modules/.bin/vite build",
+    "build:electron": "npm run build && electron-builder",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:win": "npm run build && electron-builder --win",
+    "build:all": "npm run build && electron-builder --mac --win"
+  },
+  "build": {
+    "appId": "com.dacoco.generic-msig",
+    "productName": "Generic MSIG",
+    "copyright": "Copyright © 2026 DACOCO",
+    "icon": "src/assets/icon/app-icon.png",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "main.js",
+      "preload.js",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Utility"
+    }
+  },
+  "dependencies": {
+    "@alien-worlds/icons": "^0.0.49",
+    "@alien-worlds/uikit": "^0.5.5",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
+    "@dnd-kit/utilities": "^3.2.2",
+    "@wharfkit/antelope": "^1.0.5",
+    "@wharfkit/protocol-scatter": "^1.3.1",
+    "@wharfkit/session": "^1.6.0",
+    "@wharfkit/transact-plugin-explorerlink": "^1.0.1",
+    "@wharfkit/wallet-plugin-anchor": "^1.3.1",
+    "@wharfkit/wallet-plugin-cloudwallet": "^1.3.3",
+    "@wharfkit/wallet-plugin-wombat": "^1.2.2",
+    "@wharfkit/web-renderer": "^1.4.0",
+    "formik": "^2.4.9",
+    "next": "^16.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "eslint-config-next": "^16.0.0",
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.16",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^40.2.1",
+    "electron-builder": "^24.9.1",
+    "esbuild": "^0.19.11",
+    "postcss": "^8.4.32",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.8",
+    "wait-on": "^7.2.0"
+  }
+}
