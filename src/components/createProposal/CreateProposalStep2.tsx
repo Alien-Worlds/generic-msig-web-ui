@@ -415,11 +415,19 @@ function SortableActionBlock({
                     disabled={isLoading}
                     className="flex-1 min-w-0 bg-transparent text-white text-xs font-titillium placeholder:text-[#777778]/80 outline-none"
                   />
-                  <Search2Icon
-                    boxSize={12}
-                    color="rgba(255,255,255,0.6)"
-                    className="flex-shrink-0"
-                  />
+                  <button
+                    type="button"
+                    onPointerDown={(e) => e.stopPropagation()}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onContractSearchSubmit();
+                    }}
+                    disabled={isLoading || !action.contractSearch.trim()}
+                    aria-label="Search contract"
+                    className="h-6 w-6 inline-flex items-center justify-center rounded-sm hover:bg-white/10 disabled:opacity-40 disabled:cursor-not-allowed flex-shrink-0"
+                  >
+                    <Search2Icon boxSize={12} color="rgba(255,255,255,0.6)" />
+                  </button>
                 </div>
                 {showSuggestions && hasSuggestions && (
                   <div className="absolute top-full left-0 right-0 z-10 mt-2 rounded-lg border border-white/10 bg-[#100F10] shadow-lg min-h-[80px] max-h-72 overflow-auto py-1">
@@ -593,8 +601,8 @@ export function CreateProposalStep2(props: CreateProposalStep2Props) {
 
     return (
       <div className="flex flex-col h-full min-h-0 overflow-hidden gap-4">
-        <div className="grid grid-cols-2 gap-4 flex-shrink-0 h-10">
-          <div className="rounded-[12px] bg-black flex items-center justify-between gap-3 px-4 overflow-hidden">
+        <div className="hidden lg:grid grid-cols-2 gap-4 flex-shrink-0">
+          <div className="rounded-[12px] bg-black h-10 flex items-center justify-between gap-3 px-4 overflow-hidden">
             <div className="flex items-center gap-2 min-w-0">
               {planetIcons[selectedPlanet?.value ?? "eyeke"] && (
                 <img
@@ -615,7 +623,7 @@ export function CreateProposalStep2(props: CreateProposalStep2Props) {
               {mappedProposer ?? "-"}
             </span>
           </div>
-          <div className="rounded-[12px] overflow-hidden bg-black">
+          <div className="hidden lg:block rounded-[12px] h-10 overflow-hidden bg-black">
             <img
               src={
                 (planetImagesLandscape ?? planetImages)[

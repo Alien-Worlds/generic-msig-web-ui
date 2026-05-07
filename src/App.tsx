@@ -40,7 +40,11 @@ const App: React.FC = () => {
             designe (token symbol TLM) is the Alien Worlds in-game currency,
             designed
           </p>
-          <button onClick={login} className="login-gradient-btn" type="button">
+          <button
+            onClick={login}
+            className="login-gradient-btn inline-flex items-center justify-center"
+            type="button"
+          >
             Connect Wallet
           </button>
         </div>

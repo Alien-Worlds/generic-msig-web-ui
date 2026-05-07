@@ -483,6 +483,18 @@ export default function CreateProposalView({
     [actions],
   );
   const confirmationExpireDate = useMemo(() => getProposalExpiration(7), []);
+  const step2DacId = useMemo(
+    () =>
+      getDacId(
+        selectedPlanet?.value ?? "eyeke",
+        (selectedDao?.value as "syndicate" | "union") ?? "syndicate",
+      ),
+    [selectedPlanet?.value, selectedDao?.value],
+  );
+  const step2MappedProposer = useMemo(
+    () => getDacProposer(step2DacId),
+    [step2DacId],
+  );
 
   const getValidationError = () => {
     if (!session) return "Wallet not connected";
@@ -533,8 +545,31 @@ export default function CreateProposalView({
     <>
       <main className="flex flex-col min-h-0 overflow-hidden flex-1 bg-transparent">
         {step !== 3 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 min-h-0 overflow-hidden items-stretch">
-            <div className="p-9 rounded-[12px] bg-black flex flex-col overflow-auto min-h-0">
+          <div className="flex flex-col gap-3 flex-1 min-h-0 overflow-hidden items-stretch">
+            {step === 2 && (
+              <div className="lg:hidden rounded-[12px] bg-black h-10 flex items-center justify-between gap-3 px-4 overflow-hidden">
+                <div className="flex items-center gap-2 min-w-0">
+                  {planetIcons[selectedPlanet?.value ?? "eyeke"] && (
+                    <img
+                      src={planetIcons[selectedPlanet?.value ?? "eyeke"]}
+                      alt=""
+                      className="w-[18px] h-[18px] rounded-full object-cover flex-shrink-0"
+                    />
+                  )}
+                  <span className="create-proposal-planet-label capitalize truncate">
+                    {selectedPlanet?.label ?? "Planet"}
+                  </span>
+                  <span className="text-[#777778] text-right font-titillium text-xs truncate flex-shrink-0">
+                    {selectedDao?.label ?? "DAO"}
+                  </span>
+                </div>
+                <span className="text-[#777778] text-right font-titillium text-xs truncate flex-shrink-0">
+                  {step2MappedProposer ?? "-"}
+                </span>
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 flex-1 min-h-0 overflow-hidden items-stretch">
+              <div className="px-4 py-5 sm:px-5 sm:py-6 md:p-9 rounded-[12px] bg-black flex flex-col overflow-auto min-h-0">
               <h1
                 className="create-proposal-heading mb-1"
                 id="create-proposal-title"
@@ -597,44 +632,45 @@ export default function CreateProposalView({
                   planetIcons={planetIcons}
                 />
               ) : null}
-            </div>
+              </div>
 
-            <div
-              className={`relative rounded-[12px] flex flex-col min-h-0 overflow-hidden ${
-                step === 1 ? "bg-black" : "bg-transparent"
-              }`}
-            >
-              {step === 1 ? (
-                <CreateProposalStep1
-                  slot="preview"
-                  title={title}
-                  setTitle={setTitle}
-                  description={description}
-                  setDescription={setDescription}
-                  memo={memo}
-                  setMemo={setMemo}
-                  selectedPlanet={selectedPlanet}
-                  setSelectedPlanet={setSelectedPlanet}
-                  selectedDao={selectedDao}
-                  setSelectedDao={setSelectedDao}
-                  planetImages={planetImages}
-                  planetIcons={planetIcons}
-                  previousPlanet={previousPlanet}
-                />
-              ) : step === 2 ? (
-                <CreateProposalStep2
-                  slot="right"
-                  actions={actions}
-                  activeAction={activeAction}
-                  setFieldValue={setFieldValue}
-                  validateFieldBlur={validateFieldBlur}
-                  selectedPlanet={selectedPlanet}
-                  selectedDao={selectedDao}
-                  planetImages={planetImages}
-                  planetImagesLandscape={planetImagesLandscape}
-                  planetIcons={planetIcons}
-                />
-              ) : null}
+              <div
+                className={`relative rounded-[12px] flex flex-col min-h-0 overflow-hidden ${
+                  step === 1 ? "bg-black" : "bg-transparent"
+                }`}
+              >
+                {step === 1 ? (
+                  <CreateProposalStep1
+                    slot="preview"
+                    title={title}
+                    setTitle={setTitle}
+                    description={description}
+                    setDescription={setDescription}
+                    memo={memo}
+                    setMemo={setMemo}
+                    selectedPlanet={selectedPlanet}
+                    setSelectedPlanet={setSelectedPlanet}
+                    selectedDao={selectedDao}
+                    setSelectedDao={setSelectedDao}
+                    planetImages={planetImages}
+                    planetIcons={planetIcons}
+                    previousPlanet={previousPlanet}
+                  />
+                ) : step === 2 ? (
+                  <CreateProposalStep2
+                    slot="right"
+                    actions={actions}
+                    activeAction={activeAction}
+                    setFieldValue={setFieldValue}
+                    validateFieldBlur={validateFieldBlur}
+                    selectedPlanet={selectedPlanet}
+                    selectedDao={selectedDao}
+                    planetImages={planetImages}
+                    planetImagesLandscape={planetImagesLandscape}
+                    planetIcons={planetIcons}
+                  />
+                ) : null}
+              </div>
             </div>
           </div>
         )}
