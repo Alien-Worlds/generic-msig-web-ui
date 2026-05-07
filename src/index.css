@@ -72,6 +72,7 @@
 
 /* Login page gradient button */
 .login-gradient-btn {
+  text-align: center;
   width: 160px;
   height: 36px;
   border-radius: 6px;
@@ -197,10 +198,22 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-family: Inter, sans-serif;
-  font-size: 32px;
+  font-size: 24px;
   font-style: normal;
   font-weight: 600;
-  line-height: 160%;
+  line-height: 140%;
+}
+@media (min-width: 640px) {
+  .create-proposal-heading {
+    font-size: 28px;
+    line-height: 150%;
+  }
+}
+@media (min-width: 1024px) {
+  .create-proposal-heading {
+    font-size: 32px;
+    line-height: 160%;
+  }
 }
 
 /* Create proposal Cancel button */

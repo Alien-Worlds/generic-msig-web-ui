@@ -80,6 +80,66 @@ const PAGE_SIZE = 10;
 
 /* ─── Inline SVG Icon Components (currentColor-driven) ─── */
 
+function MenuIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+    >
+      <path
+        d="M3 5h14M3 10h14M3 15h14"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function CloseIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+    >
+      <path
+        d="M5 5l10 10M15 5L5 15"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function PlusIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+    >
+      <path
+        d="M9 3v12M3 9h12"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function ClipboardTickIcon({ className = "" }: { className?: string }) {
   return (
     <svg
@@ -287,6 +347,69 @@ const TABS = [
   { label: "How it Works", icon: MessageQuestionIcon },
 ] as const;
 
+function MobileProposalCard({
+  proposal,
+  canCurrentUserApprove,
+  onApprove,
+  onExecute,
+  onOpenDetail,
+}: {
+  proposal: Proposal;
+  canCurrentUserApprove: boolean;
+  onApprove: (p: Proposal) => Promise<void>;
+  onExecute: (p: Proposal) => Promise<void>;
+  onOpenDetail: (p: Proposal) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onOpenDetail(proposal)}
+      className="w-full text-left rounded-xl border border-white/10 bg-black hover:bg-white/5 transition-colors p-4"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <div className="text-sm font-semibold text-white truncate">
+            {proposal.title}
+          </div>
+          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-white/70">
+            <span className="font-mono truncate max-w-[180px]">
+              {proposal.createdBy}
+            </span>
+            <span className="text-white/40">•</span>
+            <span className="truncate">{proposal.expireDate}</span>
+          </div>
+        </div>
+        <span
+          className={`text-xs font-semibold capitalize ${statusColor(
+            proposal.status,
+          )}`}
+        >
+          {proposal.status}
+        </span>
+      </div>
+
+      <div className="mt-3 flex items-center justify-between gap-3">
+        <span className="flex items-center gap-2 min-w-0">
+          <DaoPlanetImage dao={proposal.dao} />
+          <span className="text-xs text-white/90 truncate">{proposal.dao}</span>
+        </span>
+        <div
+          className="flex-shrink-0"
+          onClick={(e) => e.stopPropagation()}
+          role="presentation"
+        >
+          <ActionCell
+            proposal={proposal}
+            canCurrentUserApprove={canCurrentUserApprove}
+            onApprove={onApprove}
+            onExecute={onExecute}
+          />
+        </div>
+      </div>
+    </button>
+  );
+}
+
 /* ─── Main Dashboard ─── */
 
 interface MsigDashboardProps {
@@ -326,6 +449,7 @@ export default function MsigDashboard({
   );
   const [createProposalToast, setCreateProposalToast] =
     useState<CreateProposalToast | null>(null);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [postCreateRefreshKey, setPostCreateRefreshKey] = useState(0);
   const currentUser = session.actor.toString();
   const isMySubmissions = activeTab === 1;
@@ -568,79 +692,213 @@ export default function MsigDashboard({
   );
 
   return (
-    <div className="h-screen bg-[#1F1F1F] p-3 grid grid-cols-[240px_1fr] gap-3 text-white font-titillium overflow-hidden">
-      {/* ── Left Sidebar ── */}
-      <aside className="grid grid-rows-2 gap-3 min-h-0">
-        {/* Tab Navigation + Wallet (top 50%) */}
-        <div className="bg-black rounded-[12px] p-2.5 flex flex-col min-h-0">
-          <div className="flex flex-col gap-1" role="tablist">
-            {TABS.map((tab, idx) => {
-              const isActive = activeTab === idx && !showCreateProposal;
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.label}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  onClick={() => {
-                    setActiveTab(idx);
-                    if (showCreateProposal) setShowCreateProposal(false);
-                  }}
-                  className={`flex items-center gap-2.5 w-full px-3 py-2.5 rounded-[6px] transition-all ${
-                    isActive
-                      ? "tab-selected-gradient text-white text-[14px] font-bold leading-[160%] font-['Titillium_Web']"
-                      : "text-[#B9B9B9] hover:bg-white/5 text-[14px] font-normal leading-[160%] font-['Titillium_Web']"
-                  }`}
-                >
-                  <Icon
-                    className={isActive ? "text-white" : "text-[#B9B9B9]"}
-                  />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </div>
-          <div className="mt-auto pt-3 px-2 py-2 flex items-center gap-2.5 rounded-[8px] bg-[#1F1F1F]">
-            <WalletProviderIcon
-              walletPluginId={
-                (session as { walletPlugin?: { id?: string } }).walletPlugin?.id
-              }
-            />
-            <span className="text-[13px] text-white/90 font-mono truncate flex-1">
+    <div className="min-h-screen lg:h-screen lg:overflow-hidden bg-[#1F1F1F] p-3 text-white font-titillium flex flex-col lg:min-h-0">
+      {/* Mobile top bar */}
+      <header className="lg:hidden bg-black rounded-[12px] px-3 py-3 flex flex-col gap-3">
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={() => setMobileNavOpen(true)}
+            className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 transition-colors text-white"
+            aria-label="Open navigation"
+          >
+            <MenuIcon />
+          </button>
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-semibold truncate text-center">
+              {showCreateProposal ? "Create Proposal" : TABS[activeTab]?.label}
+            </div>
+            <div className="text-xs text-white/60 font-mono truncate text-center">
               {String(session.actor)}
-            </span>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 transition-colors text-[#B9B9B9] hover:text-white"
+            aria-label="Logout"
+          >
+            <LogoutIcon />
+          </button>
+        </div>
+
+        {/* Mobile / tablet search + create icon (only on dashboard views) */}
+        {!showCreateProposal && (
+          <div className="flex items-center gap-2">
+            <div className="relative flex-1">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2">
+                <SearchIcon />
+              </span>
+              <input
+                type="text"
+                placeholder="Search proposals..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full h-10 pl-10 pr-4 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder-gray-500 focus:outline-none focus:ring-1 focus:ring-amber-500/50 focus:border-amber-500/50"
+              />
+            </div>
             <button
               type="button"
-              onClick={onLogout}
-              className="flex-shrink-0 p-1.5 rounded-md hover:bg-white/10 transition-colors text-[#B9B9B9] hover:text-white"
-              aria-label="Logout"
+              onClick={() => selectedDacId && setShowCreateProposal(true)}
+              disabled={!selectedDacId}
+              aria-label="Create proposal"
+              className="inline-flex md:hidden items-center justify-center w-10 h-10 rounded-lg border border-amber-500/60 bg-gradient-to-b from-[#FFB700] to-[#D06403] text-black disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              <LogoutIcon />
+              <PlusIcon />
             </button>
           </div>
-        </div>
+        )}
+      </header>
 
-        {/* Promo Card (bottom 50%) */}
-        <div className="bg-black rounded-[12px] flex flex-col overflow-hidden min-h-0">
-          <img src="/assets/promo-bg.png" alt="" className="w-full flex-1 object-cover" />
-          <div className="flex flex-col items-center justify-center px-4 py-5 gap-3 flex-shrink-0">
-            <img
-              src="/assets/logo/alienworlds-db-logo_full_color.svg"
-              alt="Alien Worlds"
-              className="w-[90px]"
-            />
-            <p className="text-[11px] text-[#8F8E8E] text-center leading-relaxed">
-              The biggest metaverse in web3
-              <br />
-              is awaiting for you
-            </p>
+      {/* Mobile nav drawer */}
+      {mobileNavOpen && (
+        <div className="lg:hidden fixed inset-0 z-[80]">
+          <button
+            type="button"
+            className="absolute inset-0 bg-black/70"
+            aria-label="Close navigation"
+            onClick={() => setMobileNavOpen(false)}
+          />
+          <aside className="absolute left-0 top-0 bottom-0 w-[86vw] max-w-[360px] bg-black border-r border-white/10 p-3 flex flex-col">
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-semibold">Menu</div>
+              <button
+                type="button"
+                onClick={() => setMobileNavOpen(false)}
+                className="inline-flex items-center justify-center w-10 h-10 rounded-lg hover:bg-white/10 transition-colors"
+                aria-label="Close navigation"
+              >
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 flex flex-col gap-1" role="tablist">
+              {TABS.map((tab, idx) => {
+                const isActive = activeTab === idx && !showCreateProposal;
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.label}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => {
+                      setActiveTab(idx);
+                      if (showCreateProposal) setShowCreateProposal(false);
+                      setMobileNavOpen(false);
+                    }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2.5 rounded-[6px] transition-all ${
+                      isActive
+                        ? "tab-selected-gradient text-white text-[14px] font-bold leading-[160%]"
+                        : "text-[#B9B9B9] hover:bg-white/5 text-[14px] font-normal leading-[160%]"
+                    }`}
+                  >
+                    <Icon
+                      className={isActive ? "text-white" : "text-[#B9B9B9]"}
+                    />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-auto pt-3 px-2 py-2 flex items-center gap-2.5 rounded-[8px] bg-[#1F1F1F]">
+              <WalletProviderIcon
+                walletPluginId={
+                  (session as { walletPlugin?: { id?: string } }).walletPlugin?.id
+                }
+              />
+              <span className="text-[13px] text-white/90 font-mono truncate flex-1">
+                {String(session.actor)}
+              </span>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="flex-shrink-0 p-1.5 rounded-md hover:bg-white/10 transition-colors text-[#B9B9B9] hover:text-white"
+                aria-label="Logout"
+              >
+                <LogoutIcon />
+              </button>
+            </div>
+          </aside>
+        </div>
+      )}
+
+      <div className="mt-3 lg:mt-0 flex-1 min-h-0 grid lg:grid-cols-[240px_1fr] gap-3">
+        {/* Desktop sidebar */}
+        <aside className="hidden lg:grid grid-rows-2 gap-3 min-h-0 lg:min-h-0">
+          {/* Tab Navigation + Wallet */}
+          <div className="bg-black rounded-[12px] p-2.5 flex flex-col min-h-0">
+            <div className="flex flex-col gap-1" role="tablist">
+              {TABS.map((tab, idx) => {
+                const isActive = activeTab === idx && !showCreateProposal;
+                const Icon = tab.icon;
+                return (
+                  <button
+                    key={tab.label}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => {
+                      setActiveTab(idx);
+                      if (showCreateProposal) setShowCreateProposal(false);
+                    }}
+                    className={`flex items-center gap-2.5 w-full px-3 py-2.5 rounded-[6px] transition-all ${
+                      isActive
+                        ? "tab-selected-gradient text-white text-[14px] font-bold leading-[160%]"
+                        : "text-[#B9B9B9] hover:bg-white/5 text-[14px] font-normal leading-[160%]"
+                    }`}
+                  >
+                    <Icon
+                      className={isActive ? "text-white" : "text-[#B9B9B9]"}
+                    />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </div>
+            <div className="mt-auto pt-3 px-2 py-2 flex items-center gap-2.5 rounded-[8px] bg-[#1F1F1F]">
+              <WalletProviderIcon
+                walletPluginId={
+                  (session as { walletPlugin?: { id?: string } }).walletPlugin?.id
+                }
+              />
+              <span className="text-[13px] text-white/90 font-mono truncate flex-1">
+                {String(session.actor)}
+              </span>
+              <button
+                type="button"
+                onClick={onLogout}
+                className="flex-shrink-0 p-1.5 rounded-md hover:bg-white/10 transition-colors text-[#B9B9B9] hover:text-white"
+                aria-label="Logout"
+              >
+                <LogoutIcon />
+              </button>
+            </div>
           </div>
-        </div>
-      </aside>
 
-      {/* ── Right Main Area ── */}
-      <div className="flex flex-col min-h-0 gap-3">
+          {/* Promo Card */}
+          <div className="bg-black rounded-[12px] flex flex-col overflow-hidden min-h-0">
+            <img
+              src="/assets/promo-bg.png"
+              alt=""
+              className="w-full flex-1 object-cover"
+            />
+            <div className="flex flex-col items-center justify-center px-4 py-5 gap-3 flex-shrink-0">
+              <img
+                src="/assets/logo/alienworlds-db-logo_full_color.svg"
+                alt="Alien Worlds"
+                className="w-[90px]"
+              />
+              <p className="text-[11px] text-[#8F8E8E] text-center leading-relaxed">
+                The biggest metaverse in web3
+                <br />
+                is awaiting for you
+              </p>
+            </div>
+          </div>
+        </aside>
+
+        {/* ── Main Area ── */}
+        <div className="flex flex-col min-h-0 gap-3">
         {showCreateProposal ? (
           <CreateProposalView
             onCancel={() => setShowCreateProposal(false)}
@@ -674,11 +932,11 @@ export default function MsigDashboard({
             {/* Table Card */}
             <main className="bg-black rounded-[12px] flex flex-col min-h-0 overflow-hidden flex-1">
               {/* Top Bar: DAO Dropdown + Search + Create Proposal */}
-              <div className="flex items-center justify-between gap-4 px-5 pt-5 pb-4 flex-wrap">
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="flex-1 max-w-sm dashboard-dao-select-wrapper">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 min-w-[180px]">
+              <div className="flex items-center justify-between gap-4 px-4 sm:px-5 pt-5 pb-4 flex-wrap">
+                <div className="flex items-center gap-3 flex-1 min-w-0 flex-wrap">
+                  <div className="dashboard-dao-select-wrapper flex-1 max-w-sm min-w-0">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <div className="flex-1 min-w-0">
                         <Select
                           options={PLANET_OPTIONS}
                           value={selectedPlanetOption}
@@ -756,7 +1014,7 @@ export default function MsigDashboard({
                           menuPosition="fixed"
                         />
                       </div>
-                      <div className="w-[160px] flex-shrink-0">
+                      <div className="w-[148px] sm:w-[160px] flex-shrink-0">
                         <Select
                           options={DAO_OPTIONS}
                           value={selectedDaoTypeOption}
@@ -822,7 +1080,7 @@ export default function MsigDashboard({
                       </div>
                     </div>
                   </div>
-                  <div className="relative flex-1 max-w-sm">
+                  <div className="relative w-full md:flex-1 md:max-w-sm mt-3 md:mt-0 hidden lg:block">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2">
                       <SearchIcon />
                     </span>
@@ -839,14 +1097,14 @@ export default function MsigDashboard({
                   type="button"
                   onClick={() => setShowCreateProposal(true)}
                   disabled={!selectedDacId}
-                  className="login-gradient-btn"
+                  className="hidden md:inline-flex items-center justify-center login-gradient-btn disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   Create Proposal
                 </button>
               </div>
 
-              {/* Table */}
-              <div className="flex-1 overflow-auto px-5 pb-3">
+              {/* Content */}
+              <div className="flex-1 overflow-auto px-4 sm:px-5 pb-3">
                 {error && (
                   <div className="my-4 px-4 py-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm flex items-center justify-between gap-4">
                     <span>{error}</span>
@@ -865,111 +1123,144 @@ export default function MsigDashboard({
                     disabled until candidate/custodian data can be loaded.
                   </div>
                 )}
-                <table className="w-full">
-                  <thead className="sticky top-0 z-10">
-                    <tr className="font-titillium text-left text-[13px] font-bold text-white/60 bg-[#1F1F1F]">
-                      <th className="px-4 py-3 rounded-l-lg">#</th>
-                      <th className="px-4 py-3">Title</th>
-                      <th className="px-4 py-3">Created By</th>
-                      <th className="px-4 py-3">Expire Date</th>
-                      <th className="px-4 py-3">DAO</th>
-                      <th className="px-4 py-3">Approvals</th>
-                      <th className="px-4 py-3">Status</th>
-                      <th className="px-4 py-3 rounded-r-lg">Action</th>
-                    </tr>
-                  </thead>
-                  <tbody className="font-titillium text-[12px] font-normal">
-                    {!selectedDacId ? (
-                      <tr>
-                        <td
-                          colSpan={8}
-                          className="px-4 py-8 text-center text-white/60"
-                        >
-                          Select a DAO to view proposals
-                        </td>
-                      </tr>
-                    ) : loading ? (
-                      <tr>
-                        <td
-                          colSpan={8}
-                          className="px-4 py-8 text-center text-white/60"
-                        >
-                          Loading proposals...
-                        </td>
-                      </tr>
-                    ) : paginatedProposals.length === 0 ? (
-                      <tr>
-                        <td
-                          colSpan={8}
-                          className="px-4 py-8 text-center text-white/60"
-                        >
-                          No proposals found.
-                        </td>
-                      </tr>
-                    ) : (
-                      paginatedProposals.map((proposal, idx) => (
-                        <tr
+                {/* Mobile cards */}
+                <div className="lg:hidden">
+                  {!selectedDacId ? (
+                    <div className="px-2 py-8 text-center text-white/60">
+                      Select a DAO to view proposals
+                    </div>
+                  ) : loading ? (
+                    <div className="px-2 py-8 text-center text-white/60">
+                      Loading proposals...
+                    </div>
+                  ) : paginatedProposals.length === 0 ? (
+                    <div className="px-2 py-8 text-center text-white/60">
+                      No proposals found.
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {paginatedProposals.map((proposal) => (
+                        <MobileProposalCard
                           key={`${proposal.dac_id}::${proposal.proposal_name}`}
-                          className="border-b border-white/5 hover:bg-white/10 transition-colors duration-200 cursor-pointer"
-                          onClick={() => setSelectedProposal(proposal)}
-                        >
-                          <td className="px-4 py-3.5 text-white/90">
-                            {isMySubmissions ? start + idx : proposal.id}
-                          </td>
-                          <td className="px-4 py-3.5 text-white/90">
-                            {proposal.title}
-                          </td>
-                          <td className="px-4 py-3.5 font-mono text-white/80">
-                            {proposal.createdBy}
-                          </td>
-                          <td className="px-4 py-3.5 text-white/80">
-                            {proposal.expireDate}
-                          </td>
-                          <td className="px-4 py-3.5 text-white/90">
-                            <span className="flex items-center gap-1.5">
-                              <DaoPlanetImage dao={proposal.dao} />
-                              {proposal.dao}
-                            </span>
-                          </td>
-                          <td className="px-4 py-3.5 text-white/90">
-                            <span
-                              className={
-                                proposal.approvalAccountIds.length > 0
-                                  ? "cursor-help"
-                                  : undefined
-                              }
-                              title={
-                                proposal.approvalAccountIds.length > 0
-                                  ? proposal.approvalAccountIds.join(", ")
-                                  : undefined
-                              }
-                            >
-                              {proposal.approvals}
-                            </span>
-                          </td>
+                          proposal={proposal}
+                          canCurrentUserApprove={canCurrentUserApprove}
+                          onApprove={handleApprove}
+                          onExecute={handleExecute}
+                          onOpenDetail={(p) => setSelectedProposal(p)}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Desktop table */}
+                <div className="hidden lg:block">
+                  <table className="w-full">
+                    <thead className="sticky top-0 z-10">
+                      <tr className="font-titillium text-left text-[13px] font-bold text-white/60 bg-[#1F1F1F]">
+                        <th className="px-4 py-3 rounded-l-lg">#</th>
+                        <th className="px-4 py-3">Title</th>
+                        <th className="px-4 py-3">Created By</th>
+                        <th className="px-4 py-3">Expire Date</th>
+                        <th className="px-4 py-3">DAO</th>
+                        <th className="px-4 py-3">Approvals</th>
+                        <th className="px-4 py-3">Status</th>
+                        <th className="px-4 py-3 rounded-r-lg">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="font-titillium text-[12px] font-normal">
+                      {!selectedDacId ? (
+                        <tr>
                           <td
-                            className={`px-4 py-3.5 capitalize ${statusColor(
-                              proposal.status,
-                            )}`}
+                            colSpan={8}
+                            className="px-4 py-8 text-center text-white/60"
                           >
-                            {proposal.status}
-                          </td>
-                          <td
-                            className="px-4 py-3.5"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <ActionCell
-                              proposal={proposal}
-                              canCurrentUserApprove={canCurrentUserApprove}
-                              onApprove={handleApprove}
-                              onExecute={handleExecute}
-                            />
+                            Select a DAO to view proposals
                           </td>
                         </tr>
-                      ))
-                    )}
-                  </tbody>
-                </table>
+                      ) : loading ? (
+                        <tr>
+                          <td
+                            colSpan={8}
+                            className="px-4 py-8 text-center text-white/60"
+                          >
+                            Loading proposals...
+                          </td>
+                        </tr>
+                      ) : paginatedProposals.length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan={8}
+                            className="px-4 py-8 text-center text-white/60"
+                          >
+                            No proposals found.
+                          </td>
+                        </tr>
+                      ) : (
+                        paginatedProposals.map((proposal, idx) => (
+                          <tr
+                            key={`${proposal.dac_id}::${proposal.proposal_name}`}
+                            className="border-b border-white/5 hover:bg-white/10 transition-colors duration-200 cursor-pointer"
+                            onClick={() => setSelectedProposal(proposal)}
+                          >
+                            <td className="px-4 py-3.5 text-white/90">
+                              {isMySubmissions ? start + idx : proposal.id}
+                            </td>
+                            <td className="px-4 py-3.5 text-white/90">
+                              {proposal.title}
+                            </td>
+                            <td className="px-4 py-3.5 font-mono text-white/80">
+                              {proposal.createdBy}
+                            </td>
+                            <td className="px-4 py-3.5 text-white/80">
+                              {proposal.expireDate}
+                            </td>
+                            <td className="px-4 py-3.5 text-white/90">
+                              <span className="flex items-center gap-1.5">
+                                <DaoPlanetImage dao={proposal.dao} />
+                                {proposal.dao}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3.5 text-white/90">
+                              <span
+                                className={
+                                  proposal.approvalAccountIds.length > 0
+                                    ? "cursor-help"
+                                    : undefined
+                                }
+                                title={
+                                  proposal.approvalAccountIds.length > 0
+                                    ? proposal.approvalAccountIds.join(", ")
+                                    : undefined
+                                }
+                              >
+                                {proposal.approvals}
+                              </span>
+                            </td>
+                            <td
+                              className={`px-4 py-3.5 capitalize ${statusColor(
+                                proposal.status,
+                              )}`}
+                            >
+                              {proposal.status}
+                            </td>
+                            <td
+                              className="px-4 py-3.5"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <ActionCell
+                                proposal={proposal}
+                                canCurrentUserApprove={canCurrentUserApprove}
+                                onApprove={handleApprove}
+                                onExecute={handleExecute}
+                              />
+                            </td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             </main>
 
@@ -1085,6 +1376,7 @@ export default function MsigDashboard({
             </div>
           </>
         )}
+        </div>
       </div>
       <ProposalDetailModal
         isOpen={!!selectedProposal}
@@ -1101,7 +1393,7 @@ export default function MsigDashboard({
         onCleanup={handleCleanup}
       />
       {createProposalToast && (
-        <div className="fixed right-6 bottom-6 z-[70]">
+        <div className="fixed right-3 bottom-3 sm:right-6 sm:bottom-6 z-[70] max-w-[calc(100vw-24px)]">
           <div
             className="inline-flex"
             style={{

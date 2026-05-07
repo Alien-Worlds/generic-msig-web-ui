@@ -82,17 +82,17 @@ export function CreateProposalStep3({
   const icon = planetIcons[planetKey] ?? "";
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         aria-hidden
       />
       <div
-        className="relative w-[600px] min-w-[600px] max-w-[95vw] max-h-[95vh] bg-[#100F10] rounded-2xl border border-[#2E2E2E] shadow-2xl flex flex-col overflow-hidden font-titillium"
+        className="relative w-full max-w-[600px] max-h-[min(95vh,95dvh)] bg-[#100F10] rounded-2xl border border-[#2E2E2E] shadow-2xl flex flex-col min-h-0 overflow-hidden font-titillium"
         role="dialog"
         aria-modal="true"
       >
-        <div className="px-6 pt-6 pb-5 flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto relative">
+        <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5 flex-1 min-h-0 flex flex-col gap-4 overflow-y-auto overflow-x-hidden relative">
           <div className="flex flex-col items-center text-center">
             <div
               className="font-inter text-[24px] font-semibold leading-[160%]"
@@ -124,16 +124,16 @@ export function CreateProposalStep3({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-xs">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs">
+            <div className="min-w-0">
               <div className="text-white text-[14px] font-bold leading-[22.4px]">
                 Title
               </div>
-              <div className="proposal-detail-value max-w-xs mt-1">
+              <div className="proposal-detail-value mt-1 break-words">
                 {title || "—"}
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="text-white text-[14px] font-bold leading-[22.4px]">
                 DAO
               </div>
@@ -151,15 +151,15 @@ export function CreateProposalStep3({
                 <span className="proposal-detail-value">{daoLabel}</span>
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="text-white text-[14px] font-bold leading-[22.4px]">
                 Memo
               </div>
-              <div className="proposal-detail-value max-w-xs mt-1">
+              <div className="proposal-detail-value mt-1 break-words">
                 {memo || "—"}
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="text-white text-[14px] font-bold leading-[22.4px]">
                 Expire Date
               </div>
@@ -177,7 +177,7 @@ export function CreateProposalStep3({
               <div className="text-white text-[14px] font-bold leading-[22.4px]">
                 Created by
               </div>
-              <div className="proposal-detail-value font-mono mt-1">
+              <div className="proposal-detail-value font-mono mt-1 break-all">
                 {proposer || "—"}
               </div>
             </div>
@@ -201,11 +201,11 @@ export function CreateProposalStep3({
                   className="w-full bg-[#100F10] border border-[#2E2E2E] rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.5)] p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div>
+                    <div className="min-w-0 pr-2">
                       <div className="text-white text-[14px] font-bold leading-[22.4px]">
                         {index === 0 ? "Action" : `Action ${index + 1}`}
                       </div>
-                      <div className="proposal-detail-value mt-1">
+                      <div className="proposal-detail-value mt-1 break-words">
                         {action.contractName} - {action.selectedAction}
                       </div>
                     </div>
@@ -246,18 +246,18 @@ export function CreateProposalStep3({
 
                   {isExpanded && (
                     <div className="mt-3 pt-3 border-t border-[#2E2E2E]">
-                      <div className="proposal-detail-value grid grid-cols-2 gap-x-6 gap-y-2">
+                      <div className="proposal-detail-value grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
                         {Object.entries(action.formValues ?? {}).map(
                           ([k, v]) => {
                             const label = k
                               .replace(/_/g, " ")
                               .replace(/\b\w/g, (c) => c.toUpperCase());
                             return (
-                              <div key={k}>
+                              <div key={k} className="min-w-0">
                                 <div className="text-white text-[14px] font-bold leading-[22.4px]">
                                   {label}
                                 </div>
-                                <div className="proposal-detail-value">
+                                <div className="proposal-detail-value break-words">
                                   {stringifyValue(v)}
                                 </div>
                               </div>
@@ -265,7 +265,7 @@ export function CreateProposalStep3({
                           },
                         )}
                         {Object.keys(action.formValues ?? {}).length === 0 && (
-                          <div className="col-span-2 proposal-detail-value">
+                          <div className="sm:col-span-2 proposal-detail-value">
                             No input fields for this action.
                           </div>
                         )}
@@ -278,15 +278,14 @@ export function CreateProposalStep3({
           </div>
         </div>
 
-        <div className="px-6 pb-5 pt-2 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+        <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-2 flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 border-t border-[#2E2E2E] flex-shrink-0 bg-[#100F10]">
+          <div className="flex items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <button
               type="button"
               onClick={onBack}
               disabled={isSubmitting}
-              className="proposal-detail-neutral-btn inline-flex items-center justify-center h-9 px-6 rounded-[6px] text-white text-[14px] font-bold font-titillium"
+              className="proposal-detail-neutral-btn inline-flex items-center justify-center h-9 px-4 sm:px-6 rounded-[6px] text-white text-[14px] font-bold font-titillium flex-1 sm:flex-initial"
               style={{
-                minWidth: "120px",
                 background: "linear-gradient(180deg, #3D3D3D 0%, #1C1C1C 100%)",
                 boxShadow:
                   "0px 1px 2px rgba(251,251,251,0.25) inset, 0px -1px 2px black inset",
@@ -298,17 +297,17 @@ export function CreateProposalStep3({
               type="button"
               onClick={onConfirm}
               disabled={isSubmitting}
-              className="create-proposal-next-btn"
+              className="create-proposal-next-btn flex-1 sm:flex-initial"
             >
               {isSubmitting ? "Submitting..." : "Confirm"}
             </button>
           </div>
-          <div className="text-xs text-[#777778]">
+          <div className="text-xs text-[#777778] text-left sm:text-right w-full sm:w-auto">
             Creating proposal step 3 of 3
           </div>
         </div>
         {submitError && (
-          <div className="px-6 pb-4">
+          <div className="px-4 sm:px-6 pb-4">
             <span className="text-sm text-red-400 font-titillium">
               {submitError}
             </span>

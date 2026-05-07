@@ -547,7 +547,7 @@ export default function CreateProposalModal({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 flex-1 min-h-0 overflow-auto">
           {/* Left Column */}
-          <div className="p-6 md:p-8 flex flex-col">
+          <div className="px-4 py-5 sm:px-5 sm:py-6 md:px-8 md:py-8 flex flex-col">
             <h2
               id="create-proposal-title"
               className="text-2xl font-medium text-white font-orbitron mb-2"

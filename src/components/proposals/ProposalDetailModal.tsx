@@ -242,21 +242,18 @@ export function ProposalDetailModal({
     : null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       <div
         className="absolute inset-0 bg-black/70 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden
       />
       <div
-        className="relative w-[600px] min-w-[600px] max-w-[95vw] max-h-[95vh] bg-[#100F10] rounded-2xl border border-[#2E2E2E] shadow-2xl flex flex-col overflow-hidden font-titillium"
+        className="relative w-full max-w-[600px] max-h-[min(95vh,95dvh)] bg-[#100F10] rounded-2xl border border-[#2E2E2E] shadow-2xl flex flex-col min-h-0 overflow-hidden font-titillium"
         role="dialog"
         aria-modal="true"
       >
-        <div
-          className="absolute z-20 flex items-center"
-          style={{ top: "28px", right: "30px", gap: "4px" }}
-        >
+        <div className="absolute z-20 flex items-center gap-1 top-3 right-3 sm:top-7 sm:right-7">
           <div
             className="flex items-center justify-center text-xs"
             style={{
@@ -319,7 +316,7 @@ export function ProposalDetailModal({
           )}
         </div>
         {/* Content (includes image inside padded body) */}
-        <div className="px-6 pt-6 pb-5 flex flex-col gap-4 overflow-auto relative">
+        <div className="px-4 sm:px-6 pt-14 sm:pt-6 pb-4 sm:pb-5 flex flex-col gap-4 flex-1 min-h-0 overflow-y-auto overflow-x-hidden relative">
           {/* Planet landscape image inside body padding */}
           <div className="w-full h-32 min-h-32 flex-none shrink-0 rounded-xl overflow-hidden border border-[#2E2E2E]">
             {landscape ? (
@@ -333,12 +330,12 @@ export function ProposalDetailModal({
             )}
           </div>
           {/* Info grid (Title first) */}
-          <div className="grid grid-cols-2 gap-x-6 gap-y-4 text-xs">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 text-xs">
+            <div className="min-w-0">
               <div className="text-white text-[14px] font-bold leading-[22.4px]">
                 Title
               </div>
-              <div className="proposal-detail-value max-w-xs mt-1">
+              <div className="proposal-detail-value mt-1 break-words">
                 {proposal.title || "—"}
               </div>
             </div>
@@ -360,11 +357,11 @@ export function ProposalDetailModal({
                 <span className="proposal-detail-value">{proposal.dao}</span>
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="text-white text-[14px] font-bold leading-[22.4px]">
                 Memo
               </div>
-              <div className="proposal-detail-value max-w-xs mt-1">
+              <div className="proposal-detail-value mt-1 break-words">
                 {proposal.memo || "—"}
               </div>
             </div>
@@ -393,7 +390,7 @@ export function ProposalDetailModal({
               </div>
             </div>
             {proposal.status === "executed" && (
-              <div>
+              <div className="min-w-0 sm:col-span-2">
                 <div className="text-white text-[14px] font-bold leading-[22.4px]">
                   Transaction
                 </div>
@@ -439,11 +436,11 @@ export function ProposalDetailModal({
                   className="w-full bg-[#100F10] border border-[#2E2E2E] rounded-xl shadow-[0_4px_10px_rgba(0,0,0,0.5)] p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div>
+                    <div className="min-w-0 pr-2">
                       <div className="text-white text-[14px] font-bold leading-[22.4px]">
                         Action
                       </div>
-                      <div className="proposal-detail-value mt-1">
+                      <div className="proposal-detail-value mt-1 break-words">
                         <span className="text-white/50">[Con] </span>
                         {action.contract + " - "}{" "}
                         <span className="text-white/50">[Act]</span>{" "}
@@ -487,18 +484,18 @@ export function ProposalDetailModal({
 
                   {isExpanded && (
                     <div className="mt-3 pt-3 border-t border-[#2E2E2E]">
-                      <div className="proposal-detail-value grid grid-cols-2 gap-x-6 gap-y-2">
+                      <div className="proposal-detail-value grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
                         {Object.entries(action.data ?? {}).map(
                           ([key, value]) => {
                             const label = key
                               .replace(/_/g, " ")
                               .replace(/\b\w/g, (c) => c.toUpperCase());
                             return (
-                              <div key={key}>
+                              <div key={key} className="min-w-0">
                                 <div className="text-white text-[14px] font-bold leading-[22.4px]">
                                   {label}
                                 </div>
-                                <div className="proposal-detail-value">
+                                <div className="proposal-detail-value break-words">
                                   {String(value)}
                                 </div>
                               </div>
@@ -507,7 +504,7 @@ export function ProposalDetailModal({
                         )}
                         {!action.data ||
                         Object.keys(action.data).length === 0 ? (
-                          <div className="col-span-2 proposal-detail-value">
+                          <div className="sm:col-span-2 proposal-detail-value">
                             No decoded fields available for this action.
                           </div>
                         ) : null}
@@ -542,35 +539,23 @@ export function ProposalDetailModal({
           </div>
         </div>
 
-        {/* Footer buttons + bottom-right status */}
-        <div className="px-6 pb-5 pt-2 flex items-center justify-between gap-3">
-          <div className="flex items-center">
-            <button
-              type="button"
-              onClick={onClose}
-              className="flex items-center justify-center font-titillium text-white text-[14px] font-bold"
-              style={{
-                width: "131px",
-                height: "36px",
-                padding: "7px 67px",
-                gap: "4px",
-                borderRadius: "6px",
-                background: "linear-gradient(180deg, #3D3D3D 0%, #1C1C1C 100%)",
-                boxShadow:
-                  "0 -1px 2px 0 #000 inset, 0 1px 2px 0 rgba(251, 251, 251, 0.25) inset",
-              }}
-            >
-              Close
-            </button>
-          </div>
+        {/* Footer buttons */}
+        <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-2 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3 border-t border-[#2E2E2E] flex-shrink-0 bg-[#100F10]">
+          <button
+            type="button"
+            onClick={onClose}
+            className="proposal-detail-neutral-btn inline-flex items-center justify-center w-full sm:w-auto min-h-9 px-6 rounded-md font-titillium text-white text-sm font-bold bg-gradient-to-b from-[#3D3D3D] to-[#1C1C1C] shadow-[inset_0_-1px_2px_0_#000,inset_0_1px_2px_0_rgba(251,251,251,0.25)]"
+          >
+            Close
+          </button>
 
-          <div className="flex items-center gap-2 justify-end">
+          <div className="flex flex-wrap items-stretch sm:items-center justify-end gap-2 w-full sm:w-auto">
             {canExecute && (
               <button
                 type="button"
                 onClick={() => void handleTx(onExecute)}
                 disabled={txLoading}
-                className="msig-execute-btn"
+                className="msig-execute-btn !w-auto min-w-[5.5rem] flex-1 sm:flex-initial justify-center px-3 whitespace-nowrap"
               >
                 {txLoading ? "Processing..." : "Execute"}
               </button>
@@ -582,25 +567,16 @@ export function ProposalDetailModal({
                   type="button"
                   onClick={() => void handleTx(onCancel)}
                   disabled={txLoading}
-                  className="proposal-detail-neutral-btn inline-flex items-center justify-center h-9 px-6 rounded-[6px] text-white text-[14px] font-bold font-titillium"
-                  style={{
-                    minWidth: "140px",
-                    borderRadius: "6px",
-                    background:
-                      "linear-gradient(180deg, #FF3B52 0%, #D52F42 100%)",
-                    boxShadow:
-                      "0 -1px 2px 0 #72000D inset, 0 1px 2px 0 #F7B3BB inset",
-                  }}
+                  className="proposal-detail-neutral-btn inline-flex items-center justify-center min-h-9 px-4 sm:px-6 rounded-md text-white text-sm font-bold font-titillium flex-1 sm:flex-initial bg-gradient-to-b from-[#FF3B52] to-[#D52F42] shadow-[inset_0_-1px_2px_0_#72000D,inset_0_1px_2px_0_#F7B3BB] whitespace-nowrap"
                 >
                   {txLoading ? "Processing..." : "Cancel MSIG"}
                 </button>
               )}
             {proposal.status === "pending" && proposal.hasApproved && (
               <span
-                className={`inline-flex items-center justify-center px-6 text-[14px] font-bold font-titillium ${statusColor(
+                className={`inline-flex items-center justify-center px-4 py-2 min-h-9 text-sm font-bold font-titillium ${statusColor(
                   "approved",
                 )}`}
-                style={{ width: "140px", height: "34px" }}
               >
                 You approved
               </span>
@@ -612,8 +588,7 @@ export function ProposalDetailModal({
                   type="button"
                   onClick={() => void handleTx(onApprove)}
                   disabled={txLoading}
-                  className="msig-approve-btn inline-flex items-center justify-center px-6 text-[14px] font-bold font-titillium"
-                  style={{ width: "140px", height: "34px" }}
+                  className="msig-approve-btn !w-auto min-w-[5.5rem] flex-1 sm:flex-initial justify-center px-3 whitespace-nowrap text-sm font-bold font-titillium"
                 >
                   {txLoading ? "Processing..." : "Approve"}
                 </button>
