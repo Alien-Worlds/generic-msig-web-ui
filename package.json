@@ -81,7 +81,7 @@
     "@wharfkit/wallet-plugin-wombat": "^1.2.2",
     "@wharfkit/web-renderer": "^1.4.0",
     "formik": "^2.4.9",
-    "next": "^16.0.0",
+    "next": "^16.2.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
