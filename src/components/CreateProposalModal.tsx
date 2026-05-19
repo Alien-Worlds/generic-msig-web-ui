@@ -164,7 +164,7 @@ const PLANET_NAMES = [
   "naron",
   "nerix",
   "veles",
-  "testa", // TEMP: testing planet (uses eyeke images)
+  // "testa", // TEMP: testing planet (uses eyeke images)
 ] as const;
 
 const PLANET_OPTIONS: Option[] = PLANET_NAMES.map((name) => ({
